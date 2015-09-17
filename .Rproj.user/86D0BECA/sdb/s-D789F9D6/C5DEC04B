@@ -1,0 +1,17 @@
+{
+    "contents" : "\nlinreg <- setRefClass(\"linreg\",\n                      fields=list(formula=\"formula\",data=\"data.frame\",\n                                  betaHat=\"matrix\",yHat=\"matrix\",res=\"matrix\",\n                                  df=\"integer\", varRes=\"numeric\", \n                                  varCoef=\"matrix\",tBeta2=\"numeric\",p=\"numeric\"),\n                      methods=list(\n                        initialize = function(formula,data) {\n                          X<-model.matrix(formula, data=data)\n                          nameY<-all.vars(formula)[1]\n                          y<-data[[nameY]]\n                          betaHat<<-solve(t(X)%*%X)%*%t(X)%*%y\n                          yHat<<-X%*%betaHat\n                          res<<-y-yHat\n                          df<<-length(y)-dim(betaHat)[1]\n                          varRes<<-as.numeric((t(res)%*%res)/df)\n                          varCoef<<-varRes*(solve(t(X)%*%X))\n                          tBeta<-matrix()\n                          for (i in seq(dim(betaHat)[1])) {\n                            tBeta[i]<-betaHat[i]/sqrt(varCoef[i,i])\n                          }\n                          tBeta2<<-tBeta\n                          p<<-2*pt(abs(tBeta2), df=df, lower.tail=FALSE)\n                        },\n                        coef = function() {\n                          betaHat\n                        },\n                        resid = function() {\n                          res\n                        },\n                        pred = function() {\n                          yHat\n                        },\n                        print = function() {\n                          t(betaHat)\n                        },\n                        plot = function() {\n                          data2 <- data.frame(yHat,res)\n                          pl1 <- \n                            ggplot(data2) + \n                            aes(x=yHat, y=res) + \n                            geom_point()\n                          return(pl1)\n                        },\n                        summary = function() {\n                          s <- data.frame(betaHat,diag(varCoef),tBeta2,p)\n                          return(s)\n                          df\n                          return(varRes)\n                        }))\n\n\n\na <- linreg(Sepal.Length ~ Petal.Length,iris)\na$coef()\n\nb <- lm(Sepal.Length ~ Petal.Length,iris)\n\n\n\n",
+    "created" : 1442470317153.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "586584419",
+    "id" : "C5DEC04B",
+    "lastKnownWriteTime" : 1442481597,
+    "path" : "~/Dropbox/LiU/Rprog/Lab4/RLab4/RLab4/R/linregtest.R",
+    "project_path" : "RLab4/R/linregtest.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
