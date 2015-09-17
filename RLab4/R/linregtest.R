@@ -91,4 +91,5 @@ a$plot()
 b <- lm(Sepal.Length ~ Petal.Length,iris)
 
 
-
+a <- linreg(Sepal.Length ~ Species,iris)
+a$plot()
