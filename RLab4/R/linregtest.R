@@ -1,5 +1,4 @@
 
-
 linreg <- setRefClass("linreg",
                       fields=list(formula="formula",data="data.frame",
                                   betaHat="matrix",yHat="matrix",res="matrix",
@@ -24,13 +23,30 @@ linreg <- setRefClass("linreg",
                           p<<-2*pt(abs(tBeta2), df=df, lower.tail=FALSE)
                         },
                         coef = function() {
-                          return(betaHat)
+                          betaHat
                         },
                         resid = function() {
-                          return(res)
+                          res
                         },
                         pred = function() {
-                          return(yHat)
+                          yHat
+                        },
+                        print = function() {
+                          t(betaHat)
+                        },
+                        plot = function() {
+                          data2 <- data.frame(yHat,res)
+                          pl1 <- 
+                            ggplot(data2) + 
+                            aes(x=yHat, y=res) + 
+                            geom_point()
+                          return(pl1)
+                        },
+                        summary = function() {
+                          s <- data.frame(betaHat,diag(varCoef),tBeta2,p)
+                          return(s)
+                          df
+                          return(varRes)
                         }))
 
 
@@ -38,13 +54,7 @@ linreg <- setRefClass("linreg",
 a <- linreg(Sepal.Length ~ Petal.Length,iris)
 a$coef()
 
-summary
-plot
-print
-
-
-
-
+b <- lm(Sepal.Length ~ Petal.Length,iris)
 
 
 
