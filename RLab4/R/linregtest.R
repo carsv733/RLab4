@@ -73,8 +73,9 @@ linreg <- setRefClass("linreg",
                             theme(panel.grid.major = element_blank(),
                                   panel.grid.minor = element_blank(),
                                   plot.title = element_text(size = rel(1.5), face = "bold", vjust = 1.5))
-
+                          devAskNewPage(ask = TRUE)
                           return(list(pl1,pl2))
+                          
                         },
                         summary = function() {
                           s <- data.frame(betaHat,cstand2,tBeta2,p)
