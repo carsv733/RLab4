@@ -1,6 +1,6 @@
 ---
 title: "Linear regression"
-author: "Vignette Author"
+author: "Author"
 date: "2015-09-17"
 output: rmarkdown::html_vignette
 vignette: >
