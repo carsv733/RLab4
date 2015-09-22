@@ -1,5 +1,6 @@
 Package: RLab4
 Type: Package
+<<<<<<< HEAD
 Title: Linerar regression
 Version: 1.0
 Date: 2015-09-15
@@ -10,4 +11,14 @@ Maintainer: <carsv733@student.liu.se>
 Description: More about what it does (maybe more than one line)
 License: What license is it under?
 Suggests: knitr,testthat,ggplot2
+=======
+Title: Linear regression
+Version: 1.0
+Date: 2015-09-15
+Author: Caroline Svahn & Martina Sandberg
+Maintainer: Caroline Svahn <carsv733@student.liu.se>
+Description: Linear regression and additional, releated functions
+License: What license is it under?
+Suggests: knitr, ggplot2
+>>>>>>> a6b30befa90cda0e9f5a30cc159b8063c90ac0b2
 VignetteBuilder: knitr
