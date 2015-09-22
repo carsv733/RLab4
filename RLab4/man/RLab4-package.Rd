@@ -20,6 +20,7 @@ License: \tab What license is it under?\cr
 \usage{
 linreg(formula,data)
 }
+
 \author{
 Martina Sandberg <marsa505@student.liu.se>
 Caroline Svahn <carsv733@student.liu.se>
