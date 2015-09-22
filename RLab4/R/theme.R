@@ -1,8 +1,8 @@
 
 
-my_theme <- function(base_size = 12, base_family = "") { 
+theme <- function(base_size = 12, base_family = "") { 
 
-  theme_grey(base_size = base_size, base_family = base_family) %+replace% 
+  theme_grey(base_size = base_size, base_family = base_family)
     theme( 
       axis.text         = element_text(size = rel(1.0), colour="black", face="bold"), 
       axis.title.x       = element_text(colour = 'black', hjust=1, size=base_size*1.2),
@@ -15,10 +15,3 @@ my_theme <- function(base_size = 12, base_family = "") {
     ) 
 }
 
-library(ggplot2)
-
-pl <- ggplot(iris, xlab="Petal length")+ggtitle("Plant growth") + aes(x=Petal.Length, y=Sepal.Length)+
-  geom_point()+my_theme()
-pl
-
-y
