@@ -100,6 +100,6 @@ linreg <- setRefClass("linreg",
 #  } 
 #  p<-2*pt(abs(tBeta), df=df, lower.tail=FALSE)
 #  return(list(betaHat, yHat, res, df, varRes, varCoef, tBeta, p)) 
-}
+#}
 #linreg(waiting ~ eruptions, faithful)
 
