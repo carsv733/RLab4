@@ -84,10 +84,3 @@ linreg <- setRefClass("linreg",
                           return(list(Coefficients=s,degrees_of_freedom=df,residual_standard_error=sqrt(varRes)))
                         }))
 
-
-
-a <- linreg(Sepal.Length ~ Petal.Length,iris)
-a$plot()
-
-b <- lm(Sepal.Length ~ Petal.Length,iris)
-

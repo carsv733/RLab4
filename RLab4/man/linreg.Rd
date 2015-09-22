@@ -2,27 +2,44 @@
 \alias{linreg}
 \docType{data}
 \title{
-Linreg...
+Linear regression
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of the dataset. ~~
+Fitting linear models.
 }
-\usage{data("linreg")}
-\format{
-  The format is:
- NULL
+\usage{
+linreg(formula,data)
 }
-\details{
-%%  ~~ If necessary, more details than the __description__ above ~~
+\arguments{
+  \item{formula}{
+an argument of class "formula".
 }
-\source{
-%%  ~~ reference to a publication or URL from which the data were obtained ~~
+  \item{data}{
+an optional data frame.
 }
-\references{
-%%  ~~ possibly secondary sources and usages ~~
 }
-\examples{
-data(linreg)
-## maybe str(linreg) ; plot(linreg) ...
+\value{
+linreg returns an object of class "linreg".
+
+linreg contains the following components:
+ \item{coef}{
+a named vector of coefficients.
 }
-\keyword{datasets}
+ \item{pred}{
+a vector of the predicted values.
+}
+ \item{resid}{
+a vector of the residuals.
+}
+ \item{summary}{
+a list containing the coefficients with their standard error, t-value and p-value, the estimate of sigma and the degrees of freedom.
+}
+ \item{print}{
+a vector of coefficients and coefficient names.
+}
+ \item{plot}{
+a plot of residuals vs fitted and a plot of standardized residuals vs fitted.
+}
+}
+
+\keyword{linearregression}
