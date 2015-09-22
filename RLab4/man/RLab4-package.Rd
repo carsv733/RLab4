@@ -16,6 +16,7 @@ Version: \tab 1.0\cr
 Date: \tab 2015-09-15\cr
 License: \tab What license is it under?\cr
 }
+}
 \usage{
 linreg(formula,data)
 }
