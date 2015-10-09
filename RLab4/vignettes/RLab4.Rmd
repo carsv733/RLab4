@@ -1,6 +1,6 @@
 ---
 title: "Linear regression"
-author: "Caroline Svahn & Martina Sandber"
+author: "Caroline Svahn & Martina Sandberg"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
