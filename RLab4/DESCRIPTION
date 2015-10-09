@@ -9,5 +9,5 @@ Author: c(
 Maintainer: <carsv733@student.liu.se>
 Description: Linear regression and additional, releated functions
 License: What license is it under?
-Suggests: knitr,testthat,ggplot2
+Suggests: knitr,testthat,ggplot2,dplyr,nycflights13
 VignetteBuilder: knitr

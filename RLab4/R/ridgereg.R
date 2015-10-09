@@ -28,7 +28,7 @@ ridgereg <- setRefClass("ridgereg",
                             res<<-y-yHat
                             df<<-length(y)-dim(betaHat)[1]
                             varRes<<-as.numeric((t(res)%*%res)/df)
-                            varCoef<<-varRes*(solve(t(X)%*%X))
+                            varCoef<<-varRes*(solve(t(X_norm)%*%X_norm))
                             tBeta<-matrix()
                             for (i in seq(dim(betaHat)[1])) {
                               tBeta[i]<-betaHat[i]/sqrt(varCoef[i,i])
