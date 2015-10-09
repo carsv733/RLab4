@@ -24,11 +24,6 @@ summary(model1)
 summary(model2)
 
 
-model_info <- getModelInfo(model = "ridge", regex = FALSE)[[1]]
-## Model components
-names(model_info)
-
-
 
 modelInfo <- list(label = "Ridge Regression",
                   library = "RLab4",
@@ -83,19 +78,45 @@ model3 <- train(medv ~ crim + indus + zn + chas +
                    method = modelInfo)
 
 
-fitControl <- trainControl(method = "repeatedcv",
-                           ## 10-fold CV...
-                           number = 10,
-                           ## repeated ten times
-                           repeats = 10)
-
+fitControl <- trainControl(method = "repeatedcv",number = 10,repeats = 10)
 model4 <- train(medv ~ crim + indus + zn + chas + 
                   nox + rm + age + dis + rad + tax + ptratio 
                 + b + lstat,data=Train,
                 method = modelInfo,
                 trControl = fitControl)
+
 model5 <- ridgereg(medv ~ crim + indus + zn + chas + 
            nox + rm + age + dis + rad + tax + ptratio 
          + b + lstat,data=Train,0.0001)
 
 model5$summary()
+
+
+a <- predict(model1, newdata = Test)
+plot(a,type="l",col="red")
+lines(Test$medv, col="blue")
+
+b <- predict(model2, newdata = Test)
+plot(b,type="l",col="red")
+lines(Test$medv, col="blue")
+
+med <- NULL
+for (j in 1:length(Test$zn)){
+  med[j] <- (model5$coef()[1] + model5$coef()[2]*Test$crim[j] + model5$coef()[3]*Test$indus[j]
+    + model5$coef()[4]*Test$zn[j] + model5$coef()[6]*Test$nox[j] + model5$coef()[7]*Test$rm[j] 
+    + model5$coef()[8]*Test$age[j] + model5$coef()[9]*Test$dis[j] 
+    + model5$coef()[10]*Test$rad[j] + model5$coef()[11]*Test$tax[j] 
+    + model5$coef()[12]*Test$ptratio[j] + model5$coef()[13]*Test$b[j]
+    + model5$coef()[14]*Test$lstat[j])
+  med <- append(med,med[j])
+}
+
+
+chas
+
+med <- med[-100]
+error <- med-Test$medv
+# Function that returns Root Mean Squared Error
+rmse <- function(error){
+  sqrt(mean(error^2))
+}
