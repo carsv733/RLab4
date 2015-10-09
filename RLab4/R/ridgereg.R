@@ -45,7 +45,6 @@ ridgereg <- setRefClass("ridgereg",
                               cstand[i]<-sqrt(varCoef[i,i])
                             }
                             cstand2 <<- cstand
-                            library(ggplot2)
                           },
                           coef = function() {
                             betaHat
@@ -58,37 +57,6 @@ ridgereg <- setRefClass("ridgereg",
                           },
                           print = function() {
                             t(betaHat)
-                          },
-                          plot = function() {
-                            data2 <- data.frame(yHat,res,rstand2)
-                            
-                            pl1 <- 
-                              ggplot(data2) + 
-                              aes(x=yHat, y=res) + 
-                              geom_point(shape = 1) +
-                              geom_smooth(method = "loess", formula = y ~ x, se = FALSE, colour = "red") +
-                              labs(x = "Fitted values", y = "Residuals") + 
-                              ggtitle("Residuals vs Fitted") +
-                              theme_bw() +
-                              theme(panel.grid.major = element_blank(),
-                                    panel.grid.minor = element_blank(),
-                                    plot.title = element_text(size = rel(1.5), face = "bold", vjust = 1.5))
-                            
-                            
-                            pl2 <- 
-                              ggplot(data2) + 
-                              aes(x=yHat, y=rstand2) + 
-                              geom_point(shape = 1)+
-                              geom_smooth(method = "loess", formula = y ~ x, se = FALSE, colour = "red") +
-                              labs(x = "Fitted values", y = "sqrt(Standard residuals)") + 
-                              ggtitle("Scale-Location") +
-                              theme_bw() +
-                              theme(panel.grid.major = element_blank(),
-                                    panel.grid.minor = element_blank(),
-                                    plot.title = element_text(size = rel(1.5), face = "bold", vjust = 1.5))
-                            devAskNewPage(ask = TRUE)
-                            return(list(pl1,pl2))
-                            
                           },
                           summary = function() {
                             s <- data.frame(betaHat,cstand2,tBeta2,p)
