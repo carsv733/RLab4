@@ -1,0 +1,15 @@
+Package: RLab4
+Type: Package
+Title: Linear regression
+Version: 1.0
+Date: 2015-09-15
+Author: c(
+    person("Martina", "Sandberg", email = "marsa505@student.liu.se", role = "cre"),
+    person("Caroline", "Svahn", email = "carsv733@student.liu.se", role = "aut"))
+Maintainer: <carsv733@student.liu.se>
+Description: Linear regression and additional, releated functions
+License: What license is it under?
+Suggests: knitr,testthat,ggplot2
+VignetteBuilder: knitr
+NeedsCompilation: no
+Packaged: 2015-09-22 17:07:23 UTC; Caroline
