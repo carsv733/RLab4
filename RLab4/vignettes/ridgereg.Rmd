@@ -9,6 +9,101 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+
+
+
+```{r,results = "hide"}
+ridgereg <- setRefClass("ridgereg",
+                        fields=list(formula="formula",data="data.frame",lambda="numeric",
+                                    betaHat="matrix",yHat="matrix",df="integer", varRes="numeric", 
+                                    varCoef="matrix",tBeta2="numeric",p="numeric",res="matrix",
+                                    rstand2="numeric",cstand2="numeric",formula2="formula"),
+                        methods=list(
+                          initialize = function(formula,data,lambda) {
+                            
+                            X<-model.matrix(formula, data=data)
+                            norm <- function(X){
+                              for (i in 2:dim(X)[2]){
+                                mean <- mean(X[,i])
+                                sd <- sd(X[,i])
+                                for (j in 1:dim(X)[1]) {
+                                  X[j,i] <- (X[j,i]-mean)/sd 
+                                }
+                              }
+                              return(X)
+                            }
+                            
+                            X_norm <- norm(X)
+                            nameY<-all.vars(formula)[1]
+                            y<-data[[nameY]]
+                            betaHat<<-solve(t(X_norm)%*%X_norm +  diag(rep(lambda,dim(X_norm)[2]), dim(X_norm)[2])   )%*%t(X_norm)%*%y
+                            yHat<<-X_norm%*%betaHat
+                            
+                            formula2 <<-formula
+                            res<<-y-yHat
+                            df<<-length(y)-dim(betaHat)[1]
+                            varRes<<-as.numeric((t(res)%*%res)/df)
+                            varCoef<<-varRes*(solve(t(X_norm)%*%X_norm))
+                            tBeta<-matrix()
+                            for (i in seq(dim(betaHat)[1])) {
+                              tBeta[i]<-betaHat[i]/sqrt(varCoef[i,i])
+                            }
+                            tBeta2<<-tBeta
+                            p<<-2*pt(abs(tBeta2), df=df, lower.tail=FALSE)
+                            rstand<-numeric(0)
+                            for (i in seq(length(res))) {
+                              rstand[i]<-sqrt((abs(res[i]-mean(res)))/varRes)
+                            }
+                            rstand2 <<- rstand
+                            cstand<-numeric(0)
+                            for (i in seq(length(betaHat))) {
+                              cstand[i]<-sqrt(varCoef[i,i])
+                            }
+                            cstand2 <<- cstand
+                          },
+                          coef = function() {
+                            betaHat
+                          },
+                          resid = function() {
+                            res
+                          },
+                          pred = function() {
+                            yHat
+                          },
+                          predict = function(data2=NULL) {
+                            X2 <-model.matrix(formula2, data=data2)
+                            norm <- function(X){
+                              for (i in 2:dim(X)[2]){
+                                mean <- mean(X[,i])
+                                sd <- sd(X[,i])
+                                for (j in 1:dim(X)[1]) {
+                                  X[j,i] <- (X[j,i]-mean)/sd 
+                                }
+                              }
+                              return(X)
+                            }
+                            X2_norm <- norm(X2)
+                            y2Hat<-X2_norm%*%betaHat
+                            # y2Hat<<-X2_norm%*%betaHat
+                            return(y2Hat)
+                          },
+                          print = function() {
+                            t(betaHat)
+                          },
+                          summary = function() {
+                            s <- data.frame(betaHat,cstand2,tBeta2,p)
+                            colnames(s) <- c("Estimate", "Std.Error","t value","p value")
+                            
+                            return(list(Coefficients=s,degrees_of_freedom=df,residual_standard_error=sqrt(varRes)))
+                          }))
+```
+  
+
+
+
+
+
+
 #Ridgereg and the caret package
 
 ## 1.
@@ -18,6 +113,7 @@ Divide the `BostonHousing` data into a test and a training dataset using the `ca
 library(RLab4)
 library(mlbench)
 library(caret)
+library(elasticnet)
 data(BostonHousing)
 
 trainIndex <- createDataPartition(BostonHousing$medv, p = .8, list = FALSE,times = 1)
@@ -39,7 +135,9 @@ Fit a linear regression model and a linear regression model with forward selecti
 ```{r}
 model2 <- train(medv ~ crim + indus + zn + chas + 
                   nox + rm + age + dis + rad + tax + ptratio 
-                + b + lstat,data=Train,method = 'leapForward')
+                + b + lstat , data=Train , method = 'leapForward')
+summary(model2)
+
 model2 <- train(medv ~ rm +  ptratio + lstat , data=Train , method = 'lm')
 ```
 
@@ -101,20 +199,22 @@ modelInfo <- list(label = "Ridge Regression",
 ```
 
 ```{r}
-#model3 <- train(medv ~ crim + indus + zn + chas + 
-#                  nox + rm + age + dis + rad + tax + ptratio 
-#                + b + lstat,data=Train,
-#                   method = modelInfo)
+model3 <- train(medv ~ crim + indus + zn + chas + 
+                  nox + rm + age + dis + rad + tax + ptratio 
+                + b + lstat,data=Train,
+                   method = modelInfo)
+model3
 ```
 
 Find the best hyperparameter value for lambda using 10-fold cross-validation.
 ```{r}
-#fitControl <- trainControl(method = "repeatedcv",number = 10,repeats = 10)
-#model4 <- train(medv ~ crim + indus + zn + chas + 
-#                  nox + rm + age + dis + rad + tax + ptratio 
-#                + b + lstat,data=Train,
-#                method = modelInfo,
-#                trControl = fitControl)
+fitControl <- trainControl(method = "repeatedcv",number = 10,repeats = 10)
+model4 <- train(medv ~ crim + indus + zn + chas + 
+                  nox + rm + age + dis + rad + tax + ptratio 
+                + b + lstat,data=Train,
+                method = modelInfo,
+                trControl = fitControl)
+model4
 ```
 
 
@@ -127,7 +227,7 @@ model5 <- ridgereg(medv ~ crim + indus + zn + chas +
 ```
 
 ```{r}
-#model5$summary()
+model5$summary()
 ```
 One non-significant parameter and residual standard error is equal to 4.84 which is better than model 2 but worse than model 1.
 
@@ -141,6 +241,10 @@ lines(Test$medv, col="blue")
 b <- predict(model2, newdata = Test)
 plot(b,type="l",col="red")
 lines(Test$medv, col="blue")
+
+c <- model5$predict(data=Test)
+plot(c,type="l",col="red")
+lines(Test$medv, col="blue")
 ```
 
 ```{r, fig.width = 7}
@@ -151,8 +255,8 @@ error1 <- a-Test$medv
 rmse(error1)
 error2 <- b-Test$medv
 rmse(error2)
+error3 <- c-Test$medv
+rmse(error3)
 ```
 
-(RMSE and plot for model 5)
-
-Model 1 performs better with RMSE 5.31 against model 2:s 5.78, but it is not a big difference, and also here we would prefer the smaller model 2.
+Model 3 performs slightly better than model 1 and both model 3 and model 1 performs better than model 2. We prefer model 3 in this case.
