@@ -1,11 +1,7 @@
-install.packages("ggplot2")
 library(ggplot2)
-install.packages("plyr")
 library(plyr)
-install.packages("dplyr")
 library(dplyr)
 require(dplyr)
-install.packages("nycflights13")
 library(nycflights13)
 data(airports)
 data(flights)
@@ -28,14 +24,5 @@ return(list(p1,p2))
 
 }
   
-p <- ggplot(head(delayDest), aes(x = head(lon), y = head(arr_delay))) +
-  geom_point() +
-  geom_point(data = delayDest, aes(y = head(arr_delay)),
-             colour = 'red', size = 3)
 
-airports
-
-
-flights %>% anti_join(airports %>% mutate(dest = faa))
-airports %>% mutate(origin = faa) %>% semi_join(flights)
 

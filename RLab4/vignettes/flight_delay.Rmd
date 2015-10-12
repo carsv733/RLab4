@@ -12,9 +12,7 @@ require(dplyr)
 library(caret)
 library(RLab4)
 
-flights<- flights %>% select(year, month, day, hour, origin, dep_delay, arr_delay, distance) %>% na.omit()
-weather<-weather %>% select(-dewp, -humid, -pressure) %>% na.omit()
-wfComb<-flights %>% inner_join(weather, by=c("origin", "year", "month", "day", "hour")) %>% mutate("prec_wind"=precip*wind_speed, "dir_wind"=wind_dir*wind_speed) 
+
 
 
 ```
