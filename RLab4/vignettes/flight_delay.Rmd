@@ -1,5 +1,16 @@
-Prediction of flight delay
-========================================================
+---
+title: "Flight Delay"
+author: "Caroline Svahn & Martina Sandberg"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Flight Delay}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+#Prediction of flight delay
 
 ## 1
 
@@ -11,10 +22,6 @@ data(weather)
 require(dplyr)
 library(caret)
 library(RLab4)
-
-
-
-
 ```
 
 
@@ -52,19 +59,16 @@ Three test models are trained, using `lambda=0.01, 0.001, 0.0001`. Below the cod
 model7 <- ridgereg(dep_delay ~ distance + temp + wind_dir + wind_speed
                    + precip + visib + prec_wind + dir_wind,
                    data=Train,0.0001)
-
 ```
 
 
 The parameters of the applied model is used to present the RMSE for the validation set:
 ```{r}
-
 v3<-model7$predict(Valid)
 v3Error<-v3-Valid$dep_delay
 RMSE3<-sqrt(mean(v3Error^2))
 
 RMSE3
-
 ```
 
 ## 5
@@ -75,7 +79,6 @@ vTestError<-vTest-Test$dep_delay
 RMSETest<-sqrt(mean(vTestError^2))
 
 RMSETest
-
 ```
 which is not far from the RMSE obtained with the training and validation sets, concluding the model seems reliable enough to generalize.
 

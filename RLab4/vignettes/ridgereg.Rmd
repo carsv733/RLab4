@@ -18,7 +18,6 @@ Divide the `BostonHousing` data into a test and a training dataset using the `ca
 library(RLab4)
 library(mlbench)
 library(caret)
-library(elasticnet)
 data(BostonHousing)
 
 trainIndex <- createDataPartition(BostonHousing$medv, p = .8, list = FALSE,times = 1)
@@ -43,7 +42,7 @@ model2 <- train(medv ~ crim + indus + zn + chas +
                 + b + lstat , data=Train , method = 'leapForward')
 summary(model2)
 
-model2 <- train(medv ~ rm +  ptratio + lstat , data=Train , method = 'lm')
+model2 <- train(medv ~ rm + dis + ptratio + lstat , data=Train , method = 'lm')
 ```
 
 ## 3.
@@ -58,56 +57,50 @@ In model 1 there is some non-significant parameters but in model 2 all parameter
 ## 4.
 Fit a ridge regression model using your `ridgereg()` function to the training dataset.
 ```{r}
-modelInfo <- list(label = "Ridge Regression",
-                  library = "RLab4",
-                  type = "Regression",
-                  parameters = data.frame(parameter = c('lambda'),
-                                          class = c("numeric"),
-                                          label = c('Weight Decay')),
-                  grid = function(x, y, len = NULL, search = "grid")  {
-                    if(search == "grid") {
-                      out <- expand.grid(lambda = c(0, 10 ^ seq(-1, -4, length = len - 1)))
-                    } else {
-                      out <- data.frame(lambda = 10^runif(len, min = -5, 1))
-                    }
-                    out
-                  },
-                  loop = NULL,
-                  fit = function(x, y, wts, param, lev, last, classProbs, ...) {
-                    enet(as.matrix(x), y, lambda = param$lambda)  
-                  },
-                  predict = function(modelFit, newdata, submodels = NULL) {
-                    predict(modelFit, newdata, 
-                            s = 1, 
-                            mode = "fraction")$fit
-                  },
-                  predictors = function(x, s = NULL, ...) {
-                    if(is.null(s))
-                    {
-                      if(!is.null(x$tuneValue))
-                      {
-                        s <- x$tuneValue$.fraction
-                      } else stop("must supply a vaue of s")
-                      out <- predict(x, s = s,
-                                     type = "coefficients",
-                                     mode = "fraction")$coefficients
-                      
-                    } else {
-                      out <- predict(x, s = s)$coefficients
-                      
-                    }
-                    names(out)[out != 0]
-                  },
-                  tags = c("Linear Regression", "L2 Regularization"),
-                  prob = NULL,
-                  sort = function(x) x[order(-x$lambda),])
+RidgeModel <- list(type=c("Regression"), library="RLab4",loop=NULL)
+par <- data.frame(parameter="lambda", class="numeric",label="Lambda")
+RidgeModel$parameters <- par
+
+grid <- function(x, y, len = NULL, search = "grid"){
+  if(search == "grid") {
+    out <- expand.grid(lambda = c(0, 10 ^ seq(-1, -4, length = len - 1)))
+  } else {
+    out <- data.frame(lambda = 10^runif(len, min = -5, 1))
+  }
+  out
+}
+RidgeModel$grid <- grid
+
+list_fit <- function(x, y, lambda, param, lev, last, classProbs, ...){
+  data <- as.data.frame(x)
+  data$response <- y
+  
+  formula <- "response ~ "
+  cov <- capture.output(cat(colnames(data), sep="+"))
+  formula <- paste(formula, cov)
+  formula <- as.formula(formula)
+  
+  RLab4::ridgereg(formula=formula, data=data, lambda=param$lambda)
+}
+RidgeModel$fit <- list_fit
+
+pred <- function(modelFit, newdata, preProc=NULL, submodels=NULL){
+  # RLab4::modelFit$predict(newdata)
+  # predict(modelFit, newdata)
+}
+RidgeModel$predict <- pred
+
+prob<- list(NULL)
+RidgeModel$prob <- prob
+
+RidgeModel$label <- "Ridgeregression"
 ```
 
 ```{r}
 model3 <- train(medv ~ crim + indus + zn + chas + 
                   nox + rm + age + dis + rad + tax + ptratio 
                 + b + lstat,data=Train,
-                   method = modelInfo)
+                   method = "ridge")
 model3
 ```
 
@@ -117,7 +110,7 @@ fitControl <- trainControl(method = "repeatedcv",number = 10,repeats = 10)
 model4 <- train(medv ~ crim + indus + zn + chas + 
                   nox + rm + age + dis + rad + tax + ptratio 
                 + b + lstat,data=Train,
-                method = modelInfo,
+                method = "ridge",
                 trControl = fitControl)
 model4
 ```
@@ -134,7 +127,7 @@ model5 <- ridgereg(medv ~ crim + indus + zn + chas +
 ```{r}
 model5$summary()
 ```
-One non-significant parameter and residual standard error is equal to 4.84 which is better than model 2 but worse than model 1.
+Two non-significant parameter and residual standard error is equal to 4.84 which is better than model 2 but worse than model 1.
 
 ## 6. 
 Evaluate the performance of all three models on the test dataset and write some concluding comments.
@@ -164,4 +157,4 @@ error3 <- c-Test$medv
 rmse(error3)
 ```
 
-Model 3 performs slightly better than model 1 and both model 3 and model 1 performs better than model 2. We prefer model 3 in this case.
+we can see that the models perform quite equal. We would prefer model 2 because it is the smallest model which is easier to work with.
