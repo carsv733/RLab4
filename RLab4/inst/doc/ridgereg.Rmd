@@ -1,0 +1,160 @@
+---
+title: "Ridge Regression"
+author: "Caroline Svahn & Martina Sandberg"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Ridge Regression}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+#Ridgereg and the caret package
+
+## 1.
+Divide the `BostonHousing` data into a test and a training dataset using the `caret` package.
+
+```{r,results = "hide"}
+library(RLab4)
+library(mlbench)
+library(caret)
+data(BostonHousing)
+
+trainIndex <- createDataPartition(BostonHousing$medv, p = .8, list = FALSE,times = 1)
+
+Train <- BostonHousing[ trainIndex,]
+Test  <- BostonHousing[-trainIndex,]
+```
+
+## 2.
+Fit a linear regression model and a linear regression model with forward selection of covariates on the training dataset.
+
+```{r}
+ model1 <- train(medv ~ crim + indus + zn + chas + 
+                  nox + rm + age + dis + rad + tax + ptratio 
+                + b + lstat , data=Train , method = 'lm')
+```
+
+
+```{r}
+model2 <- train(medv ~ crim + indus + zn + chas + 
+                  nox + rm + age + dis + rad + tax + ptratio 
+                + b + lstat , data=Train , method = 'leapForward')
+summary(model2)
+
+model2 <- train(medv ~ rm + dis + ptratio + lstat , data=Train , method = 'lm')
+```
+
+## 3.
+Evaluate the performance of these two models on the training dataset.
+```{r}
+summary(model1)
+summary(model2)
+```
+
+In model 1 there is some non-significant parameters but in model 2 all parameters are significant. The R-squared  are slightly better in model 1 and the residual standard error is also better in model 1. The p-value of the F-statistics are the same in both models. Because of the small differences between the models we would choose model 2 because it is smaller than model 1.
+
+## 4.
+Fit a ridge regression model using your `ridgereg()` function to the training dataset.
+```{r}
+RidgeModel <- list(type=c("Regression"), library="RLab4",loop=NULL)
+par <- data.frame(parameter="lambda", class="numeric",label="Lambda")
+RidgeModel$parameters <- par
+
+grid <- function(x, y, len = NULL, search = "grid"){
+  if(search == "grid") {
+    out <- expand.grid(lambda = c(0, 10 ^ seq(-1, -4, length = len - 1)))
+  } else {
+    out <- data.frame(lambda = 10^runif(len, min = -5, 1))
+  }
+  out
+}
+RidgeModel$grid <- grid
+
+list_fit <- function(x, y, lambda, param, lev, last, classProbs, ...){
+  data <- as.data.frame(x)
+  data$response <- y
+  
+  formula <- "response ~ "
+  cov <- capture.output(cat(colnames(data), sep="+"))
+  formula <- paste(formula, cov)
+  formula <- as.formula(formula)
+  
+  RLab4::ridgereg(formula=formula, data=data, lambda=param$lambda)
+}
+RidgeModel$fit <- list_fit
+
+pred <- function(modelFit, newdata, preProc=NULL, submodels=NULL){
+  # RLab4::modelFit$predict(newdata)
+  # predict(modelFit, newdata)
+}
+RidgeModel$predict <- pred
+
+prob<- list(NULL)
+RidgeModel$prob <- prob
+
+RidgeModel$label <- "Ridgeregression"
+```
+
+```{r}
+model3 <- train(medv ~ crim + indus + zn + chas + 
+                  nox + rm + age + dis + rad + tax + ptratio 
+                + b + lstat,data=Train,
+                   method = "ridge")
+model3
+```
+
+Find the best hyperparameter value for lambda using 10-fold cross-validation.
+```{r}
+fitControl <- trainControl(method = "repeatedcv",number = 10,repeats = 10)
+model4 <- train(medv ~ crim + indus + zn + chas + 
+                  nox + rm + age + dis + rad + tax + ptratio 
+                + b + lstat,data=Train,
+                method = "ridge",
+                trControl = fitControl)
+model4
+```
+
+
+## 5.
+Evaluate the performance on the training dataset. (Fit a linear model with the best lambda=0.0001.)
+```{r}
+model5 <- ridgereg(medv ~ crim + indus + zn + chas + 
+           nox + rm + age + dis + rad + tax + ptratio 
+         + b + lstat , data=Train , 0.0001)
+```
+
+```{r}
+model5$summary()
+```
+Two non-significant parameter and residual standard error is equal to 4.84 which is better than model 2 but worse than model 1.
+
+## 6. 
+Evaluate the performance of all three models on the test dataset and write some concluding comments.
+```{r, fig.width = 7}
+a <- predict(model1, newdata = Test)
+plot(a,type="l",col="red")
+lines(Test$medv, col="blue")
+
+b <- predict(model2, newdata = Test)
+plot(b,type="l",col="red")
+lines(Test$medv, col="blue")
+
+c <- model5$predict(data=Test)
+plot(c,type="l",col="red")
+lines(Test$medv, col="blue")
+```
+
+```{r, fig.width = 7}
+rmse <- function(error){
+  sqrt(mean(error^2))
+}
+error1 <- a-Test$medv
+rmse(error1)
+error2 <- b-Test$medv
+rmse(error2)
+error3 <- c-Test$medv
+rmse(error3)
+```
+
+we can see that the models perform quite equal. We would prefer model 2 because it is the smallest model which is easier to work with.
