@@ -7,7 +7,7 @@ Author: c(
     person("Martina", "Sandberg", email = "marsa505@student.liu.se", role = "cre"),
     person("Caroline", "Svahn", email = "carsv733@student.liu.se", role = "aut"))
 Maintainer: <carsv733@student.liu.se>
-Description: Linear regression and additional, releated functions
+Description: Linear regression and additional, releted functions
 License: What license is it under?
-Suggests: knitr,testthat,ggplot2,dplyr,nycflights13
+Suggests: knitr, testthat, ggplot2, dplyr, nycflights13, leaps, elasticnet
 VignetteBuilder: knitr
