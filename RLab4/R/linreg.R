@@ -1,4 +1,4 @@
-
+#Commit test comment
 linreg <- setRefClass("linreg",
                       fields=list(formula="formula",data="data.frame",
                                   betaHat="matrix",yHat="matrix",res="matrix",
