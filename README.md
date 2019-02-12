@@ -42,8 +42,9 @@ vignette("linreg")
 ## Testing
 The tests are run automatically when installing the package. They can, however, be run manually with
 ```
-test_package("RLab4") #Change this
+test_package("RLab4") 
 ```
+This does, however, require that you forked/copied the repository so that you have access to the test files. 
 
 ## Note to TA
 Please ignore the implemented theme function and the ```flight_delay``` file - these are files not relevant 
