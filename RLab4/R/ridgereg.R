@@ -6,6 +6,15 @@ ridgereg <- setRefClass("ridgereg",
                                     rstand2="numeric",cstand2="numeric"),
                         methods=list(
                           initialize = function(formula,data,lambda) {
+                            if (inherits(formula, "formula")==FALSE) {
+                              stop("The formula provided is not a formula.")
+                            }
+                            if (inherits(data, "data.frame")==FALSE) {
+                              stop("The data provided is not a data frame.")
+                            }
+                            if (inherits(lambda, "numeric")==FALSE) {
+                              stop("The lambda provided is not a numeric.")
+                            }
                             data<<-data
                             X<-model.matrix(formula, data=data)
                             norm <- function(X){
