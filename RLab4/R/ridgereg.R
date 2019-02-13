@@ -70,7 +70,6 @@ ridgereg <- setRefClass("ridgereg",
                             }
                             X2_norm <- norm(X2)
                             y2Hat<-X2_norm%*%betaHat
-                            # y2Hat<<-X2_norm%*%betaHat
                             return(y2Hat)
                           },
                           print = function() {
@@ -82,7 +81,4 @@ ridgereg <- setRefClass("ridgereg",
                             
                             return(list(Coefficients=s,degrees_of_freedom=df,residual_standard_error=sqrt(varRes)))
                           }))
-
-# a <- ridgereg(Sepal.Length ~ Petal.Width + Petal.Length, iris, 0.2)
-# a$predict(head(iris))      
 
