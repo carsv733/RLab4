@@ -6,6 +6,12 @@ linreg <- setRefClass("linreg",
                                   rstand2="numeric",cstand2="numeric"),
                       methods=list(
                         initialize = function(formula,data) {
+                          if (inherits(formula, "formula")==FALSE) {
+                            stop("The formula provided is not a formula.")
+                          }
+                          if (inherits(data, "data.frame")==FALSE) {
+                            stop("The data provided is not a data frame.")
+                          }
                           data<<-data
                           X<-model.matrix(formula, data=data)
                           nameY<-all.vars(formula)[1]
