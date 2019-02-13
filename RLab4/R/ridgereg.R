@@ -58,8 +58,9 @@ ridgereg <- setRefClass("ridgereg",
                           },
                           predict = function(data2=NULL) {
                             if (is.null(data2)) {
-                              return("No data provided.")
-                            } else {
+                              message("No data provided, using original input.")
+                              data2<-data
+                            }
                               X2 <-model.matrix(formula, data=data2)
                               norm <- function(X){
                                 for (i in 2:dim(X)[2]){
@@ -70,7 +71,6 @@ ridgereg <- setRefClass("ridgereg",
                                   }
                                 }
                                 return(X)
-                              }
                             }
                             X2_norm <- norm(X2)
                             y2Hat<-X2_norm%*%betaHat
