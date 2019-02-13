@@ -43,9 +43,6 @@ linreg <- setRefClass("linreg",
                         pred = function() {
                           yHat
                         },
-                        print = function() {
-                          t(betaHat)
-                        },
                         plot = function() {
                           data2 <- data.frame(yHat,res,rstand2)
                           
