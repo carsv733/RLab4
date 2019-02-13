@@ -6,8 +6,9 @@ test_that("function returns a linreg object", {
 })
 
 test_that("function returns formula as a formula object", {
-  formula <- Sepal.Length ~ Petal.Length
-  expect_that(formula, is_a("formula"))
+  data(iris)
+  model <- linreg(Sepal.Length ~ Petal.Length, data=iris)
+  expect_that(model$formula, is_a("formula"))
 })
 
 test_that("function returns input data as a data frame", {
