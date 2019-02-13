@@ -57,16 +57,20 @@ ridgereg <- setRefClass("ridgereg",
                             yHat
                           },
                           predict = function(data2=NULL) {
-                            X2 <-model.matrix(formula, data=data2)
-                            norm <- function(X){
-                              for (i in 2:dim(X)[2]){
-                                mean <- mean(X[,i])
-                                sd <- sd(X[,i])
-                                for (j in 1:dim(X)[1]) {
-                                  X[j,i] <- (X[j,i]-mean)/sd 
+                            if (is.null(data2)) {
+                              return("No data provided.")
+                            } else {
+                              X2 <-model.matrix(formula, data=data2)
+                              norm <- function(X){
+                                for (i in 2:dim(X)[2]){
+                                  mean <- mean(X[,i])
+                                  sd <- sd(X[,i])
+                                  for (j in 1:dim(X)[1]) {
+                                    X[j,i] <- (X[j,i]-mean)/sd 
+                                  }
                                 }
+                                return(X)
                               }
-                              return(X)
                             }
                             X2_norm <- norm(X2)
                             y2Hat<-X2_norm%*%betaHat
