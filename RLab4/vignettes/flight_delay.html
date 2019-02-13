@@ -12,7 +12,7 @@
 
 <meta name="author" content="Caroline Svahn &amp; Martina Sandberg" />
 
-<meta name="date" content="2019-02-12" />
+<meta name="date" content="2019-02-13" />
 
 <title>Flight Delay</title>
 
@@ -92,7 +92,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Flight Delay</h1>
 <h4 class="author"><em>Caroline Svahn &amp; Martina Sandberg</em></h4>
-<h4 class="date"><em>2019-02-12</em></h4>
+<h4 class="date"><em>2019-02-13</em></h4>
 
 
 
@@ -141,7 +141,7 @@ v3Error&lt;-v3<span class="op">-</span>Valid<span class="op">$</span>dep_delay
 RMSE3&lt;-<span class="kw">sqrt</span>(<span class="kw">mean</span>(v3Error<span class="op">^</span><span class="dv">2</span>))
 
 RMSE3</code></pre></div>
-<pre><code>## [1] 39.64664</code></pre>
+<pre><code>## [1] 40.54492</code></pre>
 </div>
 <div id="section-4" class="section level2">
 <h2>5</h2>
@@ -151,7 +151,7 @@ vTestError&lt;-vTest<span class="op">-</span>Test<span class="op">$</span>dep_de
 RMSETest&lt;-<span class="kw">sqrt</span>(<span class="kw">mean</span>(vTestError<span class="op">^</span><span class="dv">2</span>))
 
 RMSETest</code></pre></div>
-<pre><code>## [1] 37.50685</code></pre>
+<pre><code>## [1] 39.36386</code></pre>
 <p>which is not far from the RMSE obtained with the training and validation sets, concluding the model seems reliable enough to generalize.</p>
 </div>
 </div>
