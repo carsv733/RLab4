@@ -6,6 +6,7 @@ linreg <- setRefClass("linreg",
                                   rstand2="numeric",cstand2="numeric"),
                       methods=list(
                         initialize = function(formula,data) {
+                          data<<-data
                           X<-model.matrix(formula, data=data)
                           nameY<-all.vars(formula)[1]
                           y<-data[[nameY]]
