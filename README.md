@@ -40,11 +40,13 @@ vignette("linreg")
 ```
 
 ## Testing
-The tests are run automatically when installing the package. They can, however, be run manually with
+The tests are run automatically when installing the package. They can, however, be run manually using the ```testthat``` package:
 ```
-test_package("RLab4") 
+install.packages("testthat")
+library("testthat")
+result <- test_package("RLab4") 
 ```
-This does, however, require that you forked/copied the repository so that you have access to the test files. 
+Details of the tests will then be represented as a list in ```results```.
 
 ## Note to TA
 Please ignore the implemented theme function and the ```flight_delay``` file - these are files not relevant 
