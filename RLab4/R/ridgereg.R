@@ -6,7 +6,7 @@ ridgereg <- setRefClass("ridgereg",
                                     rstand2="numeric",cstand2="numeric",formula2="formula"),
                         methods=list(
                           initialize = function(formula,data,lambda) {
-                            
+                            data<<-data
                             X<-model.matrix(formula, data=data)
                             norm <- function(X){
                               for (i in 2:dim(X)[2]){
