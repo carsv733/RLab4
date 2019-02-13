@@ -76,3 +76,15 @@ test_that("function returns standard deviation of coefficients as a numeric", {
   model <- linreg(Sepal.Length ~ Petal.Length, data=iris)
   expect_that(model$cstand2, is_a("numeric"))
 })
+
+# Message tests
+test_that("function throws an error when not fed a formula", {
+  data(iris)
+  form <- "Sepal.Length ~ Petal.Length+Petal.Width"
+  expect_error(linreg(form,iris), "The formula provided is not a formula.")
+})
+
+test_that("function throws an error when not fed a data frame", {
+  data(iris)
+  expect_error(linreg(Sepal.Length ~ Petal.Length+Petal.Width,as.list(iris)), "The data provided is not a data frame.")
+})
