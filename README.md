@@ -46,7 +46,7 @@ install.packages("testthat")
 library("testthat")
 result <- test_package("RLab4") 
 ```
-Details of the tests will then be represented as a list in ```results```.
+Details of the tests will then be represented as a list in ```result```.
 
 ## Note to TA
 Please ignore the implemented theme function and the ```flight_delay``` file - these are files not relevant 
