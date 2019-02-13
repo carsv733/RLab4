@@ -3,7 +3,7 @@ ridgereg <- setRefClass("ridgereg",
                         fields=list(formula="formula",data="data.frame",lambda="numeric",
                                     betaHat="matrix",yHat="matrix",df="integer", varRes="numeric", 
                                     varCoef="matrix",tBeta2="numeric",p="numeric",res="matrix",
-                                    rstand2="numeric",cstand2="numeric",formula2="formula"),
+                                    rstand2="numeric",cstand2="numeric"),
                         methods=list(
                           initialize = function(formula,data,lambda) {
                             data<<-data
@@ -25,7 +25,7 @@ ridgereg <- setRefClass("ridgereg",
                             betaHat<<-solve(t(X_norm)%*%X_norm +  diag(rep(lambda,dim(X_norm)[2]), dim(X_norm)[2])   )%*%t(X_norm)%*%y
                             yHat<<-X_norm%*%betaHat
                             
-                            formula2 <<-formula
+                            formula <<-formula
                             res<<-y-yHat
                             df<<-length(y)-dim(betaHat)[1]
                             varRes<<-as.numeric((t(res)%*%res)/df)
@@ -57,7 +57,7 @@ ridgereg <- setRefClass("ridgereg",
                             yHat
                           },
                           predict = function(data2=NULL) {
-                            X2 <-model.matrix(formula2, data=data2)
+                            X2 <-model.matrix(formula, data=data2)
                             norm <- function(X){
                               for (i in 2:dim(X)[2]){
                                 mean <- mean(X[,i])
