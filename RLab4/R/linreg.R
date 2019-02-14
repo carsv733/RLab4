@@ -4,7 +4,7 @@ linreg <- setRefClass("linreg",
                                   df="integer", varRes="numeric", 
                                   varCoef="matrix",tBeta2="numeric",p="numeric",
                                   rstand2="numeric",cstand2="numeric"),
-                      contains = "numOperations",
+                      contains = c("numOperations", "dateOperations"),
                       methods=list(
                         initialize = function(formula,data) {
                           if (inherits(formula, "formula")==FALSE) {
@@ -40,9 +40,6 @@ linreg <- setRefClass("linreg",
                           }
                           cstand2 <<- cstand
                           library(ggplot2)
-                        },
-                        date_func = function() {
-                          paste("This function was called",Sys.Date())
                         },
                         coef = function() {
                           betaHat
