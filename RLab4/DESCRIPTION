@@ -11,4 +11,5 @@ Description: Linear regression and additional, releted functions
 License: What license is it under?
 Suggests: knitr, testthat, ggplot2, dplyr, nycflights13, leaps, elasticnet, caret, rmarkdown, mlbench
 VignetteBuilder: knitr
+Collate: 'numOperations.R' 'dateOperations.R' 'linreg.R' 'ridgereg.R' 'theme.R' 'visualize_airplort_delays.R'
 RoxygenNote: 6.1.1
