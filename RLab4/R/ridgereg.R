@@ -18,17 +18,6 @@ ridgereg <- setRefClass("ridgereg",
                             }
                             data<<-data
                             X<-model.matrix(formula, data=data)
-                            #norm <- function(X){
-                            #  for (i in 2:dim(X)[2]){
-                            #    mean <- mean(X[,i])
-                            #    sd <- sd(X[,i])
-                            #    for (j in 1:dim(X)[1]) {
-                            #      X[j,i] <- (X[j,i]-mean)/sd 
-                            #    }
-                            #  }
-                            #  return(X)
-                            #}
-                            
                             X_norm <- normx(X)
                             nameY<-all.vars(formula)[1]
                             y<-data[[nameY]]
@@ -71,17 +60,8 @@ ridgereg <- setRefClass("ridgereg",
                               message("No data provided, using original input.")
                               data2<-data
                             }
-                              X2 <-model.matrix(formula, data=data2)
-                            #  norm <- function(X){
-                            #    for (i in 2:dim(X)[2]){
-                            #      mean <- mean(X[,i])
-                            #      sd <- sd(X[,i])
-                            #      for (j in 1:dim(X)[1]) {
-                            #        X[j,i] <- (X[j,i]-mean)/sd 
-                            #      }
-                            #    }
-                            #    return(X)
-                            #}
+                            
+                            X2 <-model.matrix(formula, data=data2)
                             X2_norm <- normx(X2)
                             y2Hat<-X2_norm%*%betaHat
                             return(y2Hat)
