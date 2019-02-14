@@ -2,7 +2,7 @@ linreg <- setRefClass("linreg",
                       fields=list(formula="formula",data="data.frame",
                                   betaHat="matrix",yHat="matrix",res="matrix",
                                   df="integer", varRes="numeric", 
-                                  varCoef="matrix",tBeta2="numeric",p="numeric",
+                                  varCoef="matrix",t_Beta="numeric",p="numeric",
                                   rstand2="numeric",cstand2="numeric"),
                       contains = c("numOperations", "dateOperations"),
                       methods=list(
@@ -27,8 +27,8 @@ linreg <- setRefClass("linreg",
                           for (i in seq(dim(betaHat)[1])) {
                             tBeta[i]<-betaHat[i]/sqrt(varCoef[i,i])
                           }
-                          tBeta2<<-tBeta
-                          p<<-2*pt(abs(tBeta2), df=df, lower.tail=FALSE)
+                          t_Beta<<-tBeta
+                          p<<-2*pt(abs(t_Beta), df=df, lower.tail=FALSE)
                           rstand<-numeric(0)
                           for (i in seq(length(res))) {
                             rstand[i]<-sqrt((abs(res[i]-mean(res)))/varRes)
@@ -85,7 +85,7 @@ linreg <- setRefClass("linreg",
                           
                         },
                         summary = function() {
-                          s <- data.frame(betaHat,cstand2,tBeta2,p)
+                          s <- data.frame(betaHat,cstand2,t_Beta,p)
                           colnames(s) <- c("Estimate", "Std.Error","t value","p value")
                           
                           return(list(Coefficients=s,degrees_of_freedom=df,residual_standard_error=sqrt(varRes)))
