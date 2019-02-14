@@ -3,7 +3,7 @@ ridgereg <- setRefClass("ridgereg",
                         fields=list(formula="formula",data="data.frame",lambda="numeric",
                                     betaHat="matrix",yHat="matrix",df="integer", varRes="numeric", 
                                     varCoef="matrix",t_Beta="numeric",p="numeric",res="matrix",
-                                    rstand2="numeric",cstand2="numeric"),
+                                    r_stand="numeric",cstand2="numeric"),
                         contains = "numOperations",
                         methods=list(
                           initialize = function(formula,data,lambda) {
@@ -40,7 +40,7 @@ ridgereg <- setRefClass("ridgereg",
                             for (i in seq(length(res))) {
                               rstand[i]<-sqrt((abs(res[i]-mean(res)))/varRes)
                             }
-                            rstand2 <<- rstand
+                            r_stand <<- rstand
                             cstand<-numeric(0)
                             for (i in seq(length(betaHat))) {
                               cstand[i]<-sqrt(varCoef[i,i])
