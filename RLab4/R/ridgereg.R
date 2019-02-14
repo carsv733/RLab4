@@ -34,7 +34,8 @@ ridgereg <- setRefClass("ridgereg",
                               tBeta[i]<-betaHat[i]/sqrt(varCoef[i,i])
                             }
                             tBeta2<<-tBeta
-                            p<<-2*pt(abs(tBeta2), df=df, lower.tail=FALSE)
+                            prob_val <- 2
+                            p<<-prob_val*pt(abs(tBeta2), df=df, lower.tail=FALSE)
                             rstand<-numeric(0)
                             for (i in seq(length(res))) {
                               rstand[i]<-sqrt((abs(res[i]-mean(res)))/varRes)
