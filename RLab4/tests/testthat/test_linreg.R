@@ -68,7 +68,7 @@ test_that("function returns p-value as a numeric", {
 test_that("function returns standard deviation of residuals as a numeric", {
   data(iris)
   model <- linreg(Sepal.Length ~ Petal.Length, data=iris)
-  expect_that(model$rstand2, is_a("numeric"))
+  expect_that(model$r_stand, is_a("numeric"))
 })
 
 test_that("function returns standard deviation of coefficients as a numeric", {
