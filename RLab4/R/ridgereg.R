@@ -18,7 +18,7 @@ ridgereg <- setRefClass("ridgereg",
                             }
                             data<<-data
                             X<-model.matrix(formula, data=data)
-                            X_norm <- normx(X)
+                            X_norm <- norm_x(X)
                             nameY<-all.vars(formula)[1]
                             y<-data[[nameY]]
                             betaHat<<-solve(t(X_norm)%*%X_norm +  diag(rep(lambda,dim(X_norm)[2]), dim(X_norm)[2])   )%*%t(X_norm)%*%y
@@ -62,7 +62,7 @@ ridgereg <- setRefClass("ridgereg",
                             }
                             
                             X2 <-model.matrix(formula, data=data2)
-                            X2_norm <- normx(X2)
+                            X2_norm <- norm_x(X2)
                             y2Hat<-pred_y(X2_norm,betaHat)
                             return(y2Hat)
                           },

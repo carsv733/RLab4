@@ -1,6 +1,6 @@
 
 numOperations <- setRefClass("numOperations", fields=c(X="matrix", betaHat="matrix"), methods=list(
-  normx = function(X){
+  norm_x = function(X){
     for (i in 2:dim(X)[2]){
       mean <- mean(X[,i])
       sd <- sd(X[,i])
