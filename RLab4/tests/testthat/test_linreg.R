@@ -56,7 +56,7 @@ test_that("function returns coefficient variance as a matix", {
 test_that("function returns normalized coefficients as a numeric", {
   data(iris)
   model <- linreg(Sepal.Length ~ Petal.Length, data=iris)
-  expect_that(model$tBeta2, is_a("numeric"))
+  expect_that(model$t_Beta, is_a("numeric"))
 })
 
 test_that("function returns p-value as a numeric", {
