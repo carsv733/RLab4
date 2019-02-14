@@ -3,7 +3,7 @@ linreg <- setRefClass("linreg",
                                   betaHat="matrix",yHat="matrix",res="matrix",
                                   df="integer", varRes="numeric", 
                                   varCoef="matrix",t_Beta="numeric",p="numeric",
-                                  rstand2="numeric",cstand2="numeric"),
+                                  r_stand="numeric",cstand2="numeric"),
                       contains = c("numOperations", "dateOperations"),
                       methods=list(
                         initialize = function(formula,data) {
@@ -33,7 +33,7 @@ linreg <- setRefClass("linreg",
                           for (i in seq(length(res))) {
                             rstand[i]<-sqrt((abs(res[i]-mean(res)))/varRes)
                           }
-                          rstand2 <<- rstand
+                          r_stand <<- rstand
                           cstand<-numeric(0)
                           for (i in seq(length(betaHat))) {
                             cstand[i]<-sqrt(varCoef[i,i])
@@ -51,7 +51,7 @@ linreg <- setRefClass("linreg",
                           yHat
                         },
                         plot = function() {
-                          data2 <- data.frame(yHat,res,rstand2)
+                          data2 <- data.frame(yHat,res,r_stand)
                           colr <- "red"
                           vert_just <- 1.5
                           ln_size <- 1.5
@@ -71,7 +71,7 @@ linreg <- setRefClass("linreg",
                           
                           pl2 <- 
                             ggplot(data2) + 
-                            aes(x=yHat, y=rstand2) + 
+                            aes(x=yHat, y=r_stand) + 
                             geom_point(shape = point_style)+
                             geom_smooth(method = "loess", formula = y ~ x, se = FALSE, colour = colr) +
                             labs(x = "Fitted values", y = "sqrt(Standard residuals)") + 
