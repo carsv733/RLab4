@@ -52,12 +52,12 @@ linreg <- setRefClass("linreg",
                         },
                         plot = function() {
                           data2 <- data.frame(yHat,res,rstand2)
-                          
+                          colr <- "red"
                           pl1 <- 
                             ggplot(data2) + 
                             aes(x=yHat, y=res) + 
                             geom_point(shape = 1) +
-                            geom_smooth(method = "loess", formula = y ~ x, se = FALSE, colour = "red") +
+                            geom_smooth(method = "loess", formula = y ~ x, se = FALSE, colour = colr) +
                             labs(x = "Fitted values", y = "Residuals") + 
                             ggtitle("Residuals vs Fitted") +
                             theme_bw() +
@@ -70,7 +70,7 @@ linreg <- setRefClass("linreg",
                             ggplot(data2) + 
                             aes(x=yHat, y=rstand2) + 
                             geom_point(shape = 1)+
-                            geom_smooth(method = "loess", formula = y ~ x, se = FALSE, colour = "red") +
+                            geom_smooth(method = "loess", formula = y ~ x, se = FALSE, colour = colr) +
                             labs(x = "Fitted values", y = "sqrt(Standard residuals)") + 
                             ggtitle("Scale-Location") +
                             theme_bw() +
