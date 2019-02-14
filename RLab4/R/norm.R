@@ -1,6 +1,6 @@
 
-normalized <- setRefClass("normalized", fields=c(nx="matrix"), methods=list(
-  normx <- function(X){
+normalized <- setRefClass("normalized", fields=c(X="matrix", betaHat="matrix"), methods=list(
+  normx = function(X){
     for (i in 2:dim(X)[2]){
       mean <- mean(X[,i])
       sd <- sd(X[,i])
@@ -10,9 +10,8 @@ normalized <- setRefClass("normalized", fields=c(nx="matrix"), methods=list(
     }
     return(X)
   },
-  pred_y <- function(X,betaHat) {
+  pred_y = function(X,betaHat) {
     yHat <- X%*%betaHat
     return(yHat)
   }
 ))
-
