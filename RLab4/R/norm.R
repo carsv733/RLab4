@@ -9,6 +9,10 @@ normalized <- setRefClass("normalized", fields=c(nx="matrix"), methods=list(
       }
     }
     return(X)
+  },
+  pred_y <- function(X,betaHat) {
+    yHat <- X%*%betaHat
+    return(yHat)
   }
 ))
 
