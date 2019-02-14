@@ -4,6 +4,7 @@ linreg <- setRefClass("linreg",
                                   df="integer", varRes="numeric", 
                                   varCoef="matrix",tBeta2="numeric",p="numeric",
                                   rstand2="numeric",cstand2="numeric"),
+                      contains = "normalized",
                       methods=list(
                         initialize = function(formula,data) {
                           if (inherits(formula, "formula")==FALSE) {
@@ -17,7 +18,7 @@ linreg <- setRefClass("linreg",
                           nameY<-all.vars(formula)[1]
                           y<-data[[nameY]]
                           betaHat<<-solve(t(X)%*%X)%*%t(X)%*%y
-                          yHat<<-X%*%betaHat
+                          yHat<<-normx(X,betaHat)
                           res<<-y-yHat
                           df<<-length(y)-dim(betaHat)[1]
                           varRes<<-as.numeric((t(res)%*%res)/df)
