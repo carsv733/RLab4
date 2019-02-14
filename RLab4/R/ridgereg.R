@@ -3,7 +3,7 @@ ridgereg <- setRefClass("ridgereg",
                         fields=list(formula="formula",data="data.frame",lambda="numeric",
                                     betaHat="matrix",yHat="matrix",df="integer", varRes="numeric", 
                                     varCoef="matrix",t_Beta="numeric",p="numeric",res="matrix",
-                                    r_stand="numeric",cstand2="numeric"),
+                                    r_stand="numeric",c_stand="numeric"),
                         contains = "numOperations",
                         methods=list(
                           initialize = function(formula,data,lambda) {
@@ -45,7 +45,7 @@ ridgereg <- setRefClass("ridgereg",
                             for (i in seq(length(betaHat))) {
                               cstand[i]<-sqrt(varCoef[i,i])
                             }
-                            cstand2 <<- cstand
+                            c_stand <<- cstand
                           },
                           coef = function() {
                             betaHat
@@ -71,7 +71,7 @@ ridgereg <- setRefClass("ridgereg",
                             t(betaHat)
                           },
                           summary = function() {
-                            s <- data.frame(betaHat,cstand2,t_Beta,p)
+                            s <- data.frame(betaHat,c_stand2,t_Beta,p)
                             colnames(s) <- c("Estimate", "Std.Error","t value","p value")
                             
                             return(list(Coefficients=s,degrees_of_freedom=df,residual_standard_error=sqrt(varRes)))
