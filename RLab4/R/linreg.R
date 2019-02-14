@@ -41,6 +41,9 @@ linreg <- setRefClass("linreg",
                           cstand2 <<- cstand
                           library(ggplot2)
                         },
+                        date_func = function() {
+                          paste("This function was called",Sys.Date())
+                        },
                         coef = function() {
                           betaHat
                         },
