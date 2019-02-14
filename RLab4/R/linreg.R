@@ -53,6 +53,7 @@ linreg <- setRefClass("linreg",
                         plot = function() {
                           data2 <- data.frame(yHat,res,rstand2)
                           colr <- "red"
+                          vert_just <- 1.5
                           pl1 <- 
                             ggplot(data2) + 
                             aes(x=yHat, y=res) + 
@@ -63,7 +64,7 @@ linreg <- setRefClass("linreg",
                             theme_bw() +
                             theme(panel.grid.major = element_blank(),
                                   panel.grid.minor = element_blank(),
-                                  plot.title = element_text(size = rel(1.5), face = "bold", vjust = 1.5))
+                                  plot.title = element_text(size = rel(1.5), face = "bold", vjust = vert_just))
                           
                           
                           pl2 <- 
@@ -76,7 +77,7 @@ linreg <- setRefClass("linreg",
                             theme_bw() +
                             theme(panel.grid.major = element_blank(),
                                   panel.grid.minor = element_blank(),
-                                  plot.title = element_text(size = rel(1.5), face = "bold", vjust = 1.5))
+                                  plot.title = element_text(size = rel(1.5), face = "bold", vjust = vert_just))
                           devAskNewPage(ask = TRUE)
                           return(list(pl1,pl2))
                           
