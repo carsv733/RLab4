@@ -2,7 +2,7 @@
 ridgereg <- setRefClass("ridgereg",
                         fields=list(formula="formula",data="data.frame",lambda="numeric",
                                     betaHat="matrix",yHat="matrix",df="integer", varRes="numeric", 
-                                    varCoef="matrix",tBeta2="numeric",p="numeric",res="matrix",
+                                    varCoef="matrix",t_Beta="numeric",p="numeric",res="matrix",
                                     rstand2="numeric",cstand2="numeric"),
                         contains = "numOperations",
                         methods=list(
@@ -33,9 +33,9 @@ ridgereg <- setRefClass("ridgereg",
                             for (i in seq(dim(betaHat)[1])) {
                               tBeta[i]<-betaHat[i]/sqrt(varCoef[i,i])
                             }
-                            tBeta2<<-tBeta
+                            t_Beta<<-tBeta
                             prob_val <- 2
-                            p<<-prob_val*pt(abs(tBeta2), df=df, lower.tail=FALSE)
+                            p<<-prob_val*pt(abs(t_Beta), df=df, lower.tail=FALSE)
                             rstand<-numeric(0)
                             for (i in seq(length(res))) {
                               rstand[i]<-sqrt((abs(res[i]-mean(res)))/varRes)
@@ -71,7 +71,7 @@ ridgereg <- setRefClass("ridgereg",
                             t(betaHat)
                           },
                           summary = function() {
-                            s <- data.frame(betaHat,cstand2,tBeta2,p)
+                            s <- data.frame(betaHat,cstand2,t_Beta,p)
                             colnames(s) <- c("Estimate", "Std.Error","t value","p value")
                             
                             return(list(Coefficients=s,degrees_of_freedom=df,residual_standard_error=sqrt(varRes)))
