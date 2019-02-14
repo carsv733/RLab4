@@ -4,7 +4,7 @@ ridgereg <- setRefClass("ridgereg",
                                     betaHat="matrix",yHat="matrix",df="integer", varRes="numeric", 
                                     varCoef="matrix",tBeta2="numeric",p="numeric",res="matrix",
                                     rstand2="numeric",cstand2="numeric"),
-                        contains = "normalized",
+                        contains = "numOperations",
                         methods=list(
                           initialize = function(formula,data,lambda) {
                             if (inherits(formula, "formula")==FALSE) {

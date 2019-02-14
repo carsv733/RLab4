@@ -1,5 +1,5 @@
 
-normalized <- setRefClass("normalized", fields=c(X="matrix", betaHat="matrix"), methods=list(
+numOperations <- setRefClass("numOperations", fields=c(X="matrix", betaHat="matrix"), methods=list(
   normx = function(X){
     for (i in 2:dim(X)[2]){
       mean <- mean(X[,i])

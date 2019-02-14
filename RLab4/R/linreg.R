@@ -4,7 +4,7 @@ linreg <- setRefClass("linreg",
                                   df="integer", varRes="numeric", 
                                   varCoef="matrix",tBeta2="numeric",p="numeric",
                                   rstand2="numeric",cstand2="numeric"),
-                      contains = "normalized",
+                      contains = "numOperations",
                       methods=list(
                         initialize = function(formula,data) {
                           if (inherits(formula, "formula")==FALSE) {
