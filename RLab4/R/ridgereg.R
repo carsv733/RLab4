@@ -71,7 +71,7 @@ ridgereg <- setRefClass("ridgereg",
                             t(betaHat)
                           },
                           summary = function() {
-                            s <- data.frame(betaHat,c_stand2,t_Beta,p)
+                            s <- data.frame(betaHat,c_stand,t_Beta,p)
                             colnames(s) <- c("Estimate", "Std.Error","t value","p value")
                             
                             return(list(Coefficients=s,degrees_of_freedom=df,residual_standard_error=sqrt(varRes)))
