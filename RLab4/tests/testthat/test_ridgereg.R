@@ -78,6 +78,19 @@ test_that("function returns standard deviation of coefficients as a numeric", {
   expect_that(model$c_stand, is_a("numeric"))
 })
 
+test_that("function outputs the correct number of coefficients", {
+  data(iris)
+  form <- Sepal.Length ~ Petal.Length+Petal.Width
+  model <- ridgereg(form,iris,lambda=0.5)
+  expect_length(model$transp_beta(), length(form))
+})
+
+test_that("summary function returns a list", {
+  data(iris)
+  model <- ridgereg(Sepal.Length ~ Petal.Length+Petal.Width,iris,lambda=0.5)
+  expect_that(model$summary, is_a("refMethodDef"))
+})
+
 #Message tests
 test_that("function returns a message when not fed any data", {
   data(iris)
@@ -100,4 +113,7 @@ test_that("function throws an error when not fed a numeric lambda", {
   data(iris)
   expect_error(ridgereg(Sepal.Length ~ Petal.Length+Petal.Width,iris,lambda="0.5"), "The lambda provided is not a numeric.")
 })
+
+
+
 
