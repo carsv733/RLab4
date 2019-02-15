@@ -19,9 +19,13 @@ devtools::install_github("https://github.com/carsv733/RLab4",
 ```
 Setting ```dependencies = TRUE``` installs all required packages.
 
-## Function details
-Details of the package functions (```linreg``` and ```ridgereg```) can be found in their corresponding manuals.
-Obtain the manuals by running
+## Package and method details
+Package details can be obtained by running
+
+```
+?RLab4
+```
+Details of the package classes and their methods (```linreg``` and ```ridgereg```) can be found in their corresponding manuals. Obtain the manuals by running
 
 ```
 ?linreg
@@ -40,7 +44,7 @@ vignette("linreg")
 ```
 
 ## Testing
-The tests are run automatically when installing the package. They can, however, be run manually using the ```testthat``` package:
+The tests are focused on function input control such as warnings or errors, and output control such as checking that the functions return the expected classes, object sizes or numbers. The tests are run automatically when installing the package. They can, however, be run manually using the ```testthat``` package:
 ```
 install.packages("testthat")
 library("testthat")
