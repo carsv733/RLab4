@@ -67,7 +67,7 @@ ridgereg <- setRefClass("ridgereg",
                             y2Hat<-pred_y(X2_norm,betaHat)
                             return(y2Hat)
                           },
-                          print = function() {
+                          transp_beta = function() {
                             t(betaHat)
                           },
                           summary = function() {
