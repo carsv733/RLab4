@@ -39,8 +39,8 @@ and
 Examples are found in two different vignettes. The ```ridgereg``` and ```linreg``` vignettes are obtained by running
 
 ```
-vignette("ridgereg")
-vignette("linreg")
+vignette("ridgereg") #Ridge regression
+vignette("RLab4") #Linear regression
 ```
 
 ## Testing
