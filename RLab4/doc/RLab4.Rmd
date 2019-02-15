@@ -1,0 +1,73 @@
+---
+title: "Linear regression"
+author: "Caroline Svahn & Martina Sandberg"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Linear regression}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+# Description
+
+`linreg` is used to fit linear models.
+
+## Usage
+
+linreg(formula, data)
+
+## Arguments
+* formula - an object of class "formula".
+* data - an optional data frame.
+
+# Fit a linear model
+
+```{r}
+data(iris)
+library(RLab4)
+model <- linreg(Sepal.Length ~ Petal.Length,iris)
+```
+
+# Methods
+
+`model$print()` prints out the coefficients and coefficient names.
+
+```{r}
+model$print()
+```
+
+`model$plot()` prints out two plots; Residuals vs fitted values and standardized residuals vs fitted values.
+
+```{r}
+model$plot()
+```
+
+
+`model$resid()` prints out the vector of residuals.
+
+```{r,results = "hide"}
+model$resid()
+```
+
+`model$pred()` prints out the predicted values.
+
+```{r,results = "hide"}
+model$pred()
+```
+
+`model$coef()` prints out the coefficients as a named vector.
+
+```{r}
+model$coef()
+```
+
+`model$summary()` prints out the coefficients with their standard error, t-value and p-value, the estimeta of $\sigma$ and the degrees of freedom.
+
+
+```{r}
+model$summary()
+```
+

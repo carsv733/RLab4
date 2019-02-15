@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Caroline Svahn &amp; Martina Sandberg" />
+
+<meta name="date" content="2019-02-13" />
+
+<title>Ridge Regression</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Ridge Regression</h1>
+<h4 class="author"><em>Caroline Svahn &amp; Martina Sandberg</em></h4>
+<h4 class="date"><em>2019-02-13</em></h4>
+
+
+
+<div id="ridgereg-and-the-caret-package" class="section level1">
+<h1>Ridgereg and the caret package</h1>
+<div id="section" class="section level2">
+<h2>1.</h2>
+<p>Divide the <code>BostonHousing</code> data into a test and a training dataset using the <code>caret</code> package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(RLab4)
+<span class="kw">library</span>(mlbench)
+<span class="kw">library</span>(caret)
+<span class="kw">data</span>(BostonHousing)
+
+trainIndex &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(BostonHousing<span class="op">$</span>medv, <span class="dt">p =</span> .<span class="dv">8</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>,<span class="dt">times =</span> <span class="dv">1</span>)
+
+Train &lt;-<span class="st"> </span>BostonHousing[ trainIndex,]
+Test  &lt;-<span class="st"> </span>BostonHousing[<span class="op">-</span>trainIndex,]</code></pre></div>
+</div>
+<div id="section-1" class="section level2">
+<h2>2.</h2>
+<p>Fit a linear regression model and a linear regression model with forward selection of covariates on the training dataset.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> model1 &lt;-<span class="st"> </span><span class="kw">train</span>(medv <span class="op">~</span><span class="st"> </span>crim <span class="op">+</span><span class="st"> </span>indus <span class="op">+</span><span class="st"> </span>zn <span class="op">+</span><span class="st"> </span>chas <span class="op">+</span><span class="st"> </span>
+<span class="st">                  </span>nox <span class="op">+</span><span class="st"> </span>rm <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>dis <span class="op">+</span><span class="st"> </span>rad <span class="op">+</span><span class="st"> </span>tax <span class="op">+</span><span class="st"> </span>ptratio 
+                <span class="op">+</span><span class="st"> </span>b <span class="op">+</span><span class="st"> </span>lstat , <span class="dt">data=</span>Train , <span class="dt">method =</span> <span class="st">'lm'</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model2 &lt;-<span class="st"> </span><span class="kw">train</span>(medv <span class="op">~</span><span class="st"> </span>crim <span class="op">+</span><span class="st"> </span>indus <span class="op">+</span><span class="st"> </span>zn <span class="op">+</span><span class="st"> </span>chas <span class="op">+</span><span class="st"> </span>
+<span class="st">                  </span>nox <span class="op">+</span><span class="st"> </span>rm <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>dis <span class="op">+</span><span class="st"> </span>rad <span class="op">+</span><span class="st"> </span>tax <span class="op">+</span><span class="st"> </span>ptratio 
+                <span class="op">+</span><span class="st"> </span>b <span class="op">+</span><span class="st"> </span>lstat , <span class="dt">data=</span>Train , <span class="dt">method =</span> <span class="st">'leapForward'</span>)
+<span class="kw">summary</span>(model2)</code></pre></div>
+<pre><code>## Subset selection object
+## 13 Variables  (and intercept)
+##         Forced in Forced out
+## crim        FALSE      FALSE
+## indus       FALSE      FALSE
+## zn          FALSE      FALSE
+## chas1       FALSE      FALSE
+## nox         FALSE      FALSE
+## rm          FALSE      FALSE
+## age         FALSE      FALSE
+## dis         FALSE      FALSE
+## rad         FALSE      FALSE
+## tax         FALSE      FALSE
+## ptratio     FALSE      FALSE
+## b           FALSE      FALSE
+## lstat       FALSE      FALSE
+## 1 subsets of each size up to 4
+## Selection Algorithm: forward
+##          crim indus zn  chas1 nox rm  age dis rad tax ptratio b   lstat
+## 1  ( 1 ) &quot; &quot;  &quot; &quot;   &quot; &quot; &quot; &quot;   &quot; &quot; &quot; &quot; &quot; &quot; &quot; &quot; &quot; &quot; &quot; &quot; &quot; &quot;     &quot; &quot; &quot;*&quot;  
+## 2  ( 1 ) &quot; &quot;  &quot; &quot;   &quot; &quot; &quot; &quot;   &quot; &quot; &quot;*&quot; &quot; &quot; &quot; &quot; &quot; &quot; &quot; &quot; &quot; &quot;     &quot; &quot; &quot;*&quot;  
+## 3  ( 1 ) &quot; &quot;  &quot; &quot;   &quot; &quot; &quot; &quot;   &quot; &quot; &quot;*&quot; &quot; &quot; &quot; &quot; &quot; &quot; &quot; &quot; &quot;*&quot;     &quot; &quot; &quot;*&quot;  
+## 4  ( 1 ) &quot; &quot;  &quot; &quot;   &quot; &quot; &quot; &quot;   &quot; &quot; &quot;*&quot; &quot; &quot; &quot;*&quot; &quot; &quot; &quot; &quot; &quot;*&quot;     &quot; &quot; &quot;*&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model2 &lt;-<span class="st"> </span><span class="kw">train</span>(medv <span class="op">~</span><span class="st"> </span>rm <span class="op">+</span><span class="st"> </span>dis <span class="op">+</span><span class="st"> </span>ptratio <span class="op">+</span><span class="st"> </span>lstat , <span class="dt">data=</span>Train , <span class="dt">method =</span> <span class="st">'lm'</span>)</code></pre></div>
+</div>
+<div id="section-2" class="section level2">
+<h2>3.</h2>
+<p>Evaluate the performance of these two models on the training dataset.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(model1)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = .outcome ~ ., data = dat)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -14.8461  -2.8551  -0.6473   1.5521  26.0744 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  39.515686   5.869277   6.733 5.92e-11 ***
+## crim         -0.092908   0.047523  -1.955 0.051291 .  
+## indus         0.060275   0.072666   0.829 0.407335    
+## zn            0.045522   0.015956   2.853 0.004560 ** 
+## chas1         2.801914   1.053395   2.660 0.008136 ** 
+## nox         -18.085202   4.456395  -4.058 5.97e-05 ***
+## rm            3.523571   0.476321   7.397 8.48e-13 ***
+## age          -0.006881   0.014958  -0.460 0.645757    
+## dis          -1.421798   0.225995  -6.291 8.40e-10 ***
+## rad           0.301217   0.077380   3.893 0.000116 ***
+## tax          -0.012321   0.004355  -2.829 0.004910 ** 
+## ptratio      -1.018878   0.155134  -6.568 1.62e-10 ***
+## b             0.009414   0.003134   3.004 0.002836 ** 
+## lstat        -0.527976   0.056841  -9.289  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 4.922 on 393 degrees of freedom
+## Multiple R-squared:  0.7236, Adjusted R-squared:  0.7145 
+## F-statistic: 79.14 on 13 and 393 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(model2)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = .outcome ~ ., data = dat)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -14.5462  -3.2855  -0.6173   1.8279  27.1207 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 26.87823    4.64563   5.786 1.45e-08 ***
+## rm           3.98466    0.47737   8.347 1.14e-15 ***
+## dis         -0.51400    0.14111  -3.643 0.000305 ***
+## ptratio     -1.03945    0.13488  -7.707 1.02e-13 ***
+## lstat       -0.65056    0.05155 -12.619  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 5.239 on 402 degrees of freedom
+## Multiple R-squared:  0.6797, Adjusted R-squared:  0.6765 
+## F-statistic: 213.3 on 4 and 402 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>In model 1 there is some non-significant parameters but in model 2 all parameters are significant. The R-squared are slightly better in model 1 and the residual standard error is also better in model 1. The p-value of the F-statistics are the same in both models. Because of the small differences between the models we would choose model 2 because it is smaller than model 1.</p>
+</div>
+<div id="section-3" class="section level2">
+<h2>4.</h2>
+<p>Fit a ridge regression model using your <code>ridgereg()</code> function to the training dataset.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">RidgeModel &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">type=</span><span class="kw">c</span>(<span class="st">&quot;Regression&quot;</span>), <span class="dt">library=</span><span class="st">&quot;RLab4&quot;</span>,<span class="dt">loop=</span><span class="ot">NULL</span>)
+par &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">parameter=</span><span class="st">&quot;lambda&quot;</span>, <span class="dt">class=</span><span class="st">&quot;numeric&quot;</span>,<span class="dt">label=</span><span class="st">&quot;Lambda&quot;</span>)
+RidgeModel<span class="op">$</span>parameters &lt;-<span class="st"> </span>par
+
+grid &lt;-<span class="st"> </span><span class="cf">function</span>(x, y, <span class="dt">len =</span> <span class="ot">NULL</span>, <span class="dt">search =</span> <span class="st">&quot;grid&quot;</span>){
+  <span class="cf">if</span>(search <span class="op">==</span><span class="st"> &quot;grid&quot;</span>) {
+    out &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">lambda =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">10</span> <span class="op">^</span><span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">4</span>, <span class="dt">length =</span> len <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)))
+  } <span class="cf">else</span> {
+    out &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">lambda =</span> <span class="dv">10</span><span class="op">^</span><span class="kw">runif</span>(len, <span class="dt">min =</span> <span class="op">-</span><span class="dv">5</span>, <span class="dv">1</span>))
+  }
+  out
+}
+RidgeModel<span class="op">$</span>grid &lt;-<span class="st"> </span>grid
+
+list_fit &lt;-<span class="st"> </span><span class="cf">function</span>(x, y, lambda, param, lev, last, classProbs, ...){
+  data &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(x)
+  data<span class="op">$</span>response &lt;-<span class="st"> </span>y
+  
+  formula &lt;-<span class="st"> &quot;response ~ &quot;</span>
+  cov &lt;-<span class="st"> </span><span class="kw">capture.output</span>(<span class="kw">cat</span>(<span class="kw">colnames</span>(data), <span class="dt">sep=</span><span class="st">&quot;+&quot;</span>))
+  formula &lt;-<span class="st"> </span><span class="kw">paste</span>(formula, cov)
+  formula &lt;-<span class="st"> </span><span class="kw">as.formula</span>(formula)
+  
+  RLab4<span class="op">::</span><span class="kw">ridgereg</span>(<span class="dt">formula=</span>formula, <span class="dt">data=</span>data, <span class="dt">lambda=</span>param<span class="op">$</span>lambda)
+}
+RidgeModel<span class="op">$</span>fit &lt;-<span class="st"> </span>list_fit
+
+pred &lt;-<span class="st"> </span><span class="cf">function</span>(modelFit, newdata, <span class="dt">preProc=</span><span class="ot">NULL</span>, <span class="dt">submodels=</span><span class="ot">NULL</span>){
+  <span class="co"># RLab4::modelFit$predict(newdata)</span>
+  <span class="co"># predict(modelFit, newdata)</span>
+}
+RidgeModel<span class="op">$</span>predict &lt;-<span class="st"> </span>pred
+
+prob&lt;-<span class="st"> </span><span class="kw">list</span>(<span class="ot">NULL</span>)
+RidgeModel<span class="op">$</span>prob &lt;-<span class="st"> </span>prob
+
+RidgeModel<span class="op">$</span>label &lt;-<span class="st"> &quot;Ridgeregression&quot;</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model3 &lt;-<span class="st"> </span><span class="kw">train</span>(medv <span class="op">~</span><span class="st"> </span>crim <span class="op">+</span><span class="st"> </span>indus <span class="op">+</span><span class="st"> </span>zn <span class="op">+</span><span class="st"> </span>chas <span class="op">+</span><span class="st"> </span>
+<span class="st">                  </span>nox <span class="op">+</span><span class="st"> </span>rm <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>dis <span class="op">+</span><span class="st"> </span>rad <span class="op">+</span><span class="st"> </span>tax <span class="op">+</span><span class="st"> </span>ptratio 
+                <span class="op">+</span><span class="st"> </span>b <span class="op">+</span><span class="st"> </span>lstat,<span class="dt">data=</span>Train,
+                   <span class="dt">method =</span> <span class="st">&quot;ridge&quot;</span>)
+model3</code></pre></div>
+<pre><code>## Ridge Regression 
+## 
+## 407 samples
+##  13 predictor
+## 
+## No pre-processing
+## Resampling: Bootstrapped (25 reps) 
+## Summary of sample sizes: 407, 407, 407, 407, 407, 407, ... 
+## Resampling results across tuning parameters:
+## 
+##   lambda  RMSE      Rsquared   MAE     
+##   0e+00   5.228187  0.6779083  3.592643
+##   1e-04   5.228138  0.6779155  3.592415
+##   1e-01   5.268382  0.6764221  3.545933
+## 
+## RMSE was used to select the optimal model using the smallest value.
+## The final value used for the model was lambda = 1e-04.</code></pre>
+<p>Find the best hyperparameter value for lambda using 10-fold cross-validation.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fitControl &lt;-<span class="st"> </span><span class="kw">trainControl</span>(<span class="dt">method =</span> <span class="st">&quot;repeatedcv&quot;</span>,<span class="dt">number =</span> <span class="dv">10</span>,<span class="dt">repeats =</span> <span class="dv">10</span>)
+model4 &lt;-<span class="st"> </span><span class="kw">train</span>(medv <span class="op">~</span><span class="st"> </span>crim <span class="op">+</span><span class="st"> </span>indus <span class="op">+</span><span class="st"> </span>zn <span class="op">+</span><span class="st"> </span>chas <span class="op">+</span><span class="st"> </span>
+<span class="st">                  </span>nox <span class="op">+</span><span class="st"> </span>rm <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>dis <span class="op">+</span><span class="st"> </span>rad <span class="op">+</span><span class="st"> </span>tax <span class="op">+</span><span class="st"> </span>ptratio 
+                <span class="op">+</span><span class="st"> </span>b <span class="op">+</span><span class="st"> </span>lstat,<span class="dt">data=</span>Train,
+                <span class="dt">method =</span> <span class="st">&quot;ridge&quot;</span>,
+                <span class="dt">trControl =</span> fitControl)
+model4</code></pre></div>
+<pre><code>## Ridge Regression 
+## 
+## 407 samples
+##  13 predictor
+## 
+## No pre-processing
+## Resampling: Cross-Validated (10 fold, repeated 10 times) 
+## Summary of sample sizes: 366, 367, 367, 366, 365, 366, ... 
+## Resampling results across tuning parameters:
+## 
+##   lambda  RMSE      Rsquared   MAE     
+##   0e+00   5.007800  0.7125635  3.503532
+##   1e-04   5.007725  0.7125735  3.503324
+##   1e-01   5.028408  0.7126573  3.470027
+## 
+## RMSE was used to select the optimal model using the smallest value.
+## The final value used for the model was lambda = 1e-04.</code></pre>
+</div>
+<div id="section-4" class="section level2">
+<h2>5.</h2>
+<p>Evaluate the performance on the training dataset. (Fit a linear model with the best lambda=0.0001.)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model5 &lt;-<span class="st"> </span><span class="kw">ridgereg</span>(medv <span class="op">~</span><span class="st"> </span>crim <span class="op">+</span><span class="st"> </span>indus <span class="op">+</span><span class="st"> </span>zn <span class="op">+</span><span class="st"> </span>chas <span class="op">+</span><span class="st"> </span>
+<span class="st">           </span>nox <span class="op">+</span><span class="st"> </span>rm <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>dis <span class="op">+</span><span class="st"> </span>rad <span class="op">+</span><span class="st"> </span>tax <span class="op">+</span><span class="st"> </span>ptratio 
+         <span class="op">+</span><span class="st"> </span>b <span class="op">+</span><span class="st"> </span>lstat , <span class="dt">data=</span>Train , <span class="fl">0.0001</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model5<span class="op">$</span><span class="kw">summary</span>()</code></pre></div>
+<pre><code>## $Coefficients
+##               Estimate Std.Error    t value       p value
+## (Intercept) 22.4705104 0.2439954 92.0940069 4.017705e-268
+## crim        -0.7005980 0.3583623 -1.9549989  5.129168e-02
+## indus        0.4164066 0.5020125  0.8294745  4.073395e-01
+## zn           1.0499560 0.3680221  2.8529700  4.560248e-03
+## chas1        0.6735914 0.2532401  2.6598919  8.136448e-03
+## nox         -2.0646633 0.5087570 -4.0582506  5.966632e-05
+## rm           2.4956284 0.3373622  7.3974748  8.475765e-13
+## age         -0.1957478 0.4255202 -0.4600200  6.457562e-01
+## dis         -3.0237891 0.4806326 -6.2912691  8.404740e-10
+## rad          2.6582019 0.6828723  3.8926779  1.164533e-04
+## tax         -2.1148218 0.7475735 -2.8289151  4.909945e-03
+## ptratio     -2.1577070 0.3285323 -6.5677157  1.621838e-10
+## b            0.8508981 0.2832631  3.0039138  2.835911e-03
+## lstat       -3.8373607 0.4131209 -9.2887120  1.082036e-18
+## 
+## $degrees_of_freedom
+## [1] 393
+## 
+## $residual_standard_error
+## [1] 4.922421</code></pre>
+<p>Two non-significant parameter and residual standard error is equal to 4.84 which is better than model 2 but worse than model 1.</p>
+</div>
+<div id="section-5" class="section level2">
+<h2>6.</h2>
+<p>Evaluate the performance of all three models on the test dataset and write some concluding comments.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a &lt;-<span class="st"> </span><span class="kw">predict</span>(model1, <span class="dt">newdata =</span> Test)
+<span class="kw">plot</span>(a,<span class="dt">type=</span><span class="st">&quot;l&quot;</span>,<span class="dt">col=</span><span class="st">&quot;red&quot;</span>)
+<span class="kw">lines</span>(Test<span class="op">$</span>medv, <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">b &lt;-<span class="st"> </span><span class="kw">predict</span>(model2, <span class="dt">newdata =</span> Test)
+<span class="kw">plot</span>(b,<span class="dt">type=</span><span class="st">&quot;l&quot;</span>,<span class="dt">col=</span><span class="st">&quot;red&quot;</span>)
+<span class="kw">lines</span>(Test<span class="op">$</span>medv, <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">c &lt;-<span class="st"> </span>model5<span class="op">$</span><span class="kw">predict</span>(<span class="dt">data=</span>Test)
+<span class="kw">plot</span>(c,<span class="dt">type=</span><span class="st">&quot;l&quot;</span>,<span class="dt">col=</span><span class="st">&quot;red&quot;</span>)
+<span class="kw">lines</span>(Test<span class="op">$</span>medv, <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rmse &lt;-<span class="st"> </span><span class="cf">function</span>(error){
+  <span class="kw">sqrt</span>(<span class="kw">mean</span>(error<span class="op">^</span><span class="dv">2</span>))
+}
+error1 &lt;-<span class="st"> </span>a<span class="op">-</span>Test<span class="op">$</span>medv
+<span class="kw">rmse</span>(error1)</code></pre></div>
+<pre><code>## [1] 4.030666</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">error2 &lt;-<span class="st"> </span>b<span class="op">-</span>Test<span class="op">$</span>medv
+<span class="kw">rmse</span>(error2)</code></pre></div>
+<pre><code>## [1] 4.735609</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">error3 &lt;-<span class="st"> </span>c<span class="op">-</span>Test<span class="op">$</span>medv
+<span class="kw">rmse</span>(error3)</code></pre></div>
+<pre><code>## [1] 4.041953</code></pre>
+<p>we can see that the models perform quite equal. We would prefer model 2 because it is the smallest model which is easier to work with.</p>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

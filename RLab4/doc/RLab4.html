@@ -12,7 +12,7 @@
 
 <meta name="author" content="Caroline Svahn &amp; Martina Sandberg" />
 
-<meta name="date" content="2019-02-15" />
+<meta name="date" content="2019-02-13" />
 
 <title>Linear regression</title>
 
@@ -92,7 +92,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Linear regression</h1>
 <h4 class="author"><em>Caroline Svahn &amp; Martina Sandberg</em></h4>
-<h4 class="date"><em>2019-02-15</em></h4>
+<h4 class="date"><em>2019-02-13</em></h4>
 
 
 
@@ -116,6 +116,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(iris)
 <span class="kw">library</span>(RLab4)
 model &lt;-<span class="st"> </span><span class="kw">linreg</span>(Sepal.Length <span class="op">~</span><span class="st"> </span>Petal.Length,iris)</code></pre></div>
+</div>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<p><code>model$print()</code> prints out the coefficients and coefficient names.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model<span class="op">$</span><span class="kw">print</span>()</code></pre></div>
+<pre><code>##      (Intercept) Petal.Length
+## [1,]    4.306603    0.4089223</code></pre>
 <p><code>model$plot()</code> prints out two plots; Residuals vs fitted values and standardized residuals vs fitted values.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model<span class="op">$</span><span class="kw">plot</span>()</code></pre></div>
 <pre><code>## [[1]]</code></pre>
