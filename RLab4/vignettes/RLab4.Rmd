@@ -31,14 +31,6 @@ library(RLab4)
 model <- linreg(Sepal.Length ~ Petal.Length,iris)
 ```
 
-# Methods
-
-`model$print()` prints out the coefficients and coefficient names.
-
-```{r}
-model$print()
-```
-
 `model$plot()` prints out two plots; Residuals vs fitted values and standardized residuals vs fitted values.
 
 ```{r}
