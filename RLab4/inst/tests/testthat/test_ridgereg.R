@@ -57,7 +57,7 @@ test_that("function returns coefficient variance as a matix", {
 test_that("function returns normalized coefficients as a numeric", {
   data(iris)
   model <- ridgereg(Sepal.Length ~ Petal.Length+Petal.Width,iris,lambda=0.5)
-  expect_that(model$tBeta2, is_a("numeric"))
+  expect_that(model$t_Beta, is_a("numeric"))
 })
 
 test_that("function returns p-value as a numeric", {
@@ -69,13 +69,26 @@ test_that("function returns p-value as a numeric", {
 test_that("function returns standard deviation of residuals as a numeric", {
   data(iris)
   model <- ridgereg(Sepal.Length ~ Petal.Length+Petal.Width,iris,lambda=0.5)
-  expect_that(model$rstand2, is_a("numeric"))
+  expect_that(model$r_stand, is_a("numeric"))
 })
 
 test_that("function returns standard deviation of coefficients as a numeric", {
   data(iris)
   model <- ridgereg(Sepal.Length ~ Petal.Length+Petal.Width,iris,lambda=0.5)
-  expect_that(model$cstand2, is_a("numeric"))
+  expect_that(model$c_stand, is_a("numeric"))
+})
+
+test_that("function outputs the correct number of coefficients", {
+  data(iris)
+  form <- Sepal.Length ~ Petal.Length+Petal.Width
+  model <- ridgereg(form,iris,lambda=0.5)
+  expect_length(model$transp_beta(), length(form))
+})
+
+test_that("summary function returns a list", {
+  data(iris)
+  model <- ridgereg(Sepal.Length ~ Petal.Length+Petal.Width,iris,lambda=0.5)
+  expect_that(model$summary, is_a("refMethodDef"))
 })
 
 #Message tests
@@ -100,4 +113,7 @@ test_that("function throws an error when not fed a numeric lambda", {
   data(iris)
   expect_error(ridgereg(Sepal.Length ~ Petal.Length+Petal.Width,iris,lambda="0.5"), "The lambda provided is not a numeric.")
 })
+
+
+
 
