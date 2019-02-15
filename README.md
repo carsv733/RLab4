@@ -52,6 +52,11 @@ result <- test_package("RLab4")
 ```
 Details of the tests will then be represented as a list in ```result```.
 
+## Commit procedure
+In general, the commits follow the principle COMMIT TYPE - DETAILS, where COMMIT TYPE is one of the following: bug fix, update, add, remove, extract, rename, cleanup
+
 ## Note to TA
 Please ignore the implemented theme function and the ```flight_delay``` file - these are files not relevant 
 to this software project, however, I do not want to delete them.
+
+As this is a small, forked project, the master branch is used throughout.
