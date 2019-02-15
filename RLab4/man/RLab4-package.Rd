@@ -3,10 +3,10 @@
 \alias{RLab4}
 \docType{package}
 \title{
-Linear regression and theme
+Linear regression, ridge regression and LiU theme
 }
 \description{
-Fitting linear models. Theme for LiU with ggplot2.
+Fitting linear models and ridge regression models. Theme for LiU with ggplot2.
 }
 \details{
 \tabular{ll}{
